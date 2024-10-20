@@ -14,109 +14,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Eventos para os botões do menu
   document.getElementById('tool1-btn').addEventListener('click', () => showTool('tool1'));
-  document.getElementById('tool2-btn').addEventListener('click', () => showTool('tool2'));
-  document.getElementById('tool3-btn').addEventListener('click', () => showTool('tool3'));
-  document.getElementById('tool4-btn').addEventListener('click', () => showTool('tool4'));
-  document.getElementById('tags-btn').addEventListener('click', () => startIntervalTeste());
+
+  document.getElementById('tool1-btn-iniciar').addEventListener('click', () => iniciarMonitoramento());
 
   // Exibe a primeira ferramenta ao abrir
   showTool('tool1');
 
-  // Função para exibir as URLs, títulos e horário carregados nas abas (Ferramenta 1)
-  const tabList = document.getElementById('tab-list');
 
-  // Função para formatar a hora
-  function formatTime(date) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  }
+  function iniciarMonitoramento() {
+    console.log("Monitorando URLs...");
+    // Selecionar todas as linhas que contêm URLs no atributo 'title'
+    const rows = document.querySelectorAll('tr[title*="https"]');
 
-  // Função para adicionar o título, URL e hora de carregamento à lista sem sobrescrever ou duplicar
-  function addTabInfoToList(tabId, title, url, time) {
-    const li = document.createElement('li');
-    li.setAttribute('data-tab-id', tabId); // Define o ID único da aba como um atributo
+    // Verificar se há linhas encontradas
+    if (rows.length > 0) {
+      let index = 0; // Índice inicial
 
-    // Elemento que exibirá o título da página
-    const titleElement = document.createElement('span');
-    titleElement.textContent = title ? title : 'Sem título';  // Exibe 'Sem título' se não houver título
-    titleElement.style.fontWeight = 'bold';  // Título destacado
-    titleElement.style.display = 'block';    // Título em uma linha separada
+      // Função para abrir a URL da próxima linha
+      const openNextUrl = function () {
+        if (index >= rows.length) {
+          console.log("Todas as URLs foram processadas.");
+          clearInterval(intervalId); // Para o intervalo quando todas as linhas forem processadas
+          return;
+        }
 
-    // Elemento para o link da página
-    const linkElement = document.createElement('a');
-    linkElement.href = url;
-    linkElement.textContent = url;
-    linkElement.target = '_blank';  // Abre o link em nova aba
-    linkElement.style.display = 'block';  // Link em linha separada
+        const row = rows[index];
+        const url = row.getAttribute('title'); // Obter o URL do atributo 'title'
 
-    // Elemento para a hora de carregamento
-    const timeElement = document.createElement('span');
-    timeElement.textContent = `Carregado às: ${time}`;  // Formato da hora
-    timeElement.style.fontSize = 'small';  // Tamanho da fonte menor
-    timeElement.style.color = 'gray';  // Cor do texto da hora
-    timeElement.style.display = 'block';  // Hora em linha separada
+        // Verificar se a URL é válida
+        if (url) {
+          console.log(`Abrindo URL ${index + 1}: ${url}`);
+          window.open(url, '_blank'); // Abrir o link em uma nova aba
 
-    // Adiciona o título, o link e a hora ao item da lista
-    li.appendChild(titleElement);
-    li.appendChild(linkElement);
-    li.appendChild(timeElement);
+          // Aplicar o estilo de fundo vermelho para indicar que a linha foi processada
+          row.style.setProperty('color', 'red', 'important');
 
-    // Adiciona o item à lista
-    tabList.appendChild(li);
-  }
+        } else {
+          console.log(`URL não encontrada na linha ${index + 1}`);
+        }
 
-  // Função para monitorar o carregamento de URLs em uma aba e adicionar título, URL e hora à lista
-  function monitorTabLoading(tabId, title, url) {
-    const currentTime = formatTime(new Date()); // Obtém a hora atual formatada
-    addTabInfoToList(tabId, title, url, currentTime);
-  }
+        index++; // Incrementar o índice para a próxima linha
+      };
 
-  // Inicializa ao abrir o popup, obtendo todas as abas abertas
-  chrome.tabs.query({}, function (tabs) {
-    tabs.forEach(function (tab) {
-      monitorTabLoading(tab.id, tab.title, tab.url);
-    });
-  });
-
-  // Monitora quando a URL de uma aba for atualizada/carregada
-  chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    if (changeInfo.url) {
-      monitorTabLoading(tabId, tab.title, changeInfo.url);  // Adiciona o título, a nova URL e a hora carregada à lista
+      // Iniciar o intervalo que abrirá uma URL a cada 5 segundos (5000ms)
+      const intervalId = setInterval(openNextUrl, 5000);
+    } else {
+      console.log("Nenhuma linha com URL encontrada.");
     }
-  });
 
-  // Monitora quando uma nova aba é criada
-  chrome.tabs.onCreated.addListener(function (tab) {
-    monitorTabLoading(tab.id, tab.title, tab.url);  // Adiciona o título, URL e hora da nova aba criada
-  });
-
-  // Monitora quando uma aba é fechada e remove da lista
-  chrome.tabs.onRemoved.addListener(function (tabId) {
-    const tabElements = document.querySelectorAll(`li[data-tab-id="${tabId}"]`);
-    tabElements.forEach((element) => element.remove());  // Remove todos os elementos relacionados a essa aba
-  });
+  }
 });
-
-
-function startInterval() {
-  const elements = document.querySelectorAll('.icon-tag-assistant');
-  console.log(elements);
-  console.log("1 - elemento captuarado");
-
-  let index = 0;
-
-  const intervalId = setInterval(() => {
-      console.log("2 - Entrou set Interval");
-      if (index < elements.length) {
-          console.log("3 - Entrou IF");
-          elements[index].style.background = 'red';
-          elements[index].click();
-          index++;
-      } else {
-          console.error("4 - ELSE");
-          clearInterval(intervalId); // Para o intervalo após todos os elementos
-      }
-  }, 15000); // 15 segundos
-}
 
 
 

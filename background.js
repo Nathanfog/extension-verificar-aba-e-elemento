@@ -1,12 +1,3 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url) {
-    console.log('Tab updated with new URL:', changeInfo.url);
-  }
-});
-
-chrome.tabs.onCreated.addListener((tab) => {
-  console.log('New tab created:', tab);
-});
 
 // Função que será injetada para verificar o botão "Salvar"
 function checkSaveButtonPresence() {
@@ -14,12 +5,19 @@ function checkSaveButtonPresence() {
   console.log(button);
   if (button) {
     console.log('Botão "Salvar" encontrado!');
-	button.click();
+    button.click();
+    setTimeout(() => {
+      chrome.tabs.query({ currentWindow: true }, (tabs) => {
+        // Fecha a aba atual após 3 segundos
+        chrome.tabs.remove(tabs[0].id);
+      });
+    }, 3000);
 
   } else {
     console.log('Botão "Salvar" não encontrado.');
   }
 }
+// BASE DO CÓDIGO QUE MONITORA AS ABAS E CARREGA O SCRIPT DE CADA ABA ESPECIFICADA //
 
 // Monitora quando uma aba é atualizada
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {

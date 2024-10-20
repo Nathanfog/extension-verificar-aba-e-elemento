@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Tab Monitor",
+  "name": "Monitor Tabs + Botão Salvar",
   "version": "1.0",
   "permissions": [
     "tabs",
