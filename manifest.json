@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Monitor",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://trialm1.magehub.com.br/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
