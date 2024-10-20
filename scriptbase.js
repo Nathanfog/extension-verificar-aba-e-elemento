@@ -22,32 +22,10 @@ if (rows.length > 0) {
         if (url) {
             
             window.open(url, '_blank'); // Abrir o link em uma nova aba
-
             
-
-            function calcularHoraTermino(index, rowsLength) {
-                const tempoPorURL = 7; // em segundos
-                const tempoTotal = rows.length * tempoPorURL; // tempo total em segundos
-                const tempoDecorrido = (index + 1) * tempoPorURL; // tempo decorrido em segundos
-                const tempoRestante = tempoTotal - tempoDecorrido; // tempo restante em segundos
-
-                // Obtendo a hora atual
-                const agora = new Date();
-                agora.setSeconds(agora.getSeconds() + tempoRestante);
-
-                // Formatando a hora estimada de término
-                const horaEstimada = agora.toLocaleTimeString('pt-BR');
-                return horaEstimada;
-            }
-            const rowsLength = rows.length; // total de URLs
-            console.log('Tempo estimado decorrido' + (index + 1) * 7 + ' segundos');
-            console.log('Tempo estimado decorrido Minutos' + ((index + 1) * tempoPorURL) / 60 + ' minutos');
-            console.log('Tempo estimado total para essa página' + (rows.length * tempoPorURL) / 60 + ' minutos');
-            console.log(`Hora estimada de término: ${calcularHoraTermino(index, rowsLength)}`);
+            console.log('Tempo estimado decorrido Minutos' + ((index + 1) * 4) / 60 + ' minutos');
+            console.log('Tempo estimado total para essa página' + (rows.length * 4) / 60 + ' minutos');
             console.log(`Abrindo URL ${index + 1} de ${rows.length}: ${url}`);
-
-           
-            
             row.style.setProperty('color', 'blue', 'important');
             // Aplicar o estilo de fundo vermelho para indicar que a linha foi processada
             
@@ -60,7 +38,7 @@ if (rows.length > 0) {
     };
 
     // Iniciar o intervalo que abrirá uma URL a cada 4 segundos (4000ms)
-    const intervalId = setInterval(openNextUrl, 4000);
+    const intervalId = setInterval(openNextUrl, 4500);
 } else {
     console.log("Nenhuma linha com URL encontrada.");
 }

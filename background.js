@@ -5,19 +5,27 @@ function checkSaveButtonPresence() {
   console.log(button);
   if (button) {
     console.log('Botão "Salvar" encontrado!');
-    
+
     setTimeout(() => {
       button.click();
-    }, 3000);
+    }, 2800);
 
-    
+
+
+    setTimeout(() => {
+      chrome.runtime.sendMessage({ action: 'closeTab' });
+    }, 7000);
+
+
+
+
   } else {
     console.log('Botão "Salvar" não encontrado.');
   }
 }
-// BASE DO CÓDIGO QUE MONITORA AS ABAS E CARREGA O SCRIPT DE CADA ABA ESPECIFICADA //
+// BASE DO CÓDIGO QUE MONITORA AS ABAS E CARREGA O SCRIPT DE CADA ABA ESPECIFICADA
 
-// Monitora quando uma aba é atualizada
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {  // Quando a aba terminar de carregar
     chrome.scripting.executeScript({
@@ -41,4 +49,10 @@ chrome.tabs.onCreated.addListener((tab) => {
       console.log("Erro ao injetar script: ");
     }
   });
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'closeTab') {
+    chrome.tabs.remove(sender.tab.id);  // Fecha a aba que enviou a mensagem
+  }
 });
