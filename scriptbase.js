@@ -21,13 +21,12 @@ if (rows.length > 0) {
         // Verificar se a URL é válida
         if (url) {
             
-            console.log('Tempo estimado decorrido' + (index + 1) * 8 + ' segundos');
-            console.log('Tempo estimado decorrido Minutos' + ((index + 1) * 8) / 60 + ' minutos');
-            console.log('Tempo estimado total para essa página' + (rows.length * 12) / 60 + ' minutos');
+            window.open(url, '_blank'); // Abrir o link em uma nova aba
+
             
 
             function calcularHoraTermino(index, rowsLength) {
-                const tempoPorURL = 12; // em segundos
+                const tempoPorURL = 7; // em segundos
                 const tempoTotal = rows.length * tempoPorURL; // tempo total em segundos
                 const tempoDecorrido = (index + 1) * tempoPorURL; // tempo decorrido em segundos
                 const tempoRestante = tempoTotal - tempoDecorrido; // tempo restante em segundos
@@ -41,14 +40,17 @@ if (rows.length > 0) {
                 return horaEstimada;
             }
             const rowsLength = rows.length; // total de URLs
+            console.log('Tempo estimado decorrido' + (index + 1) * 7 + ' segundos');
+            console.log('Tempo estimado decorrido Minutos' + ((index + 1) * tempoPorURL) / 60 + ' minutos');
+            console.log('Tempo estimado total para essa página' + (rows.length * tempoPorURL) / 60 + ' minutos');
             console.log(`Hora estimada de término: ${calcularHoraTermino(index, rowsLength)}`);
             console.log(`Abrindo URL ${index + 1} de ${rows.length}: ${url}`);
 
            
-            window.open(url, '_blank'); // Abrir o link em uma nova aba
-
-            // Aplicar o estilo de fundo vermelho para indicar que a linha foi processada
+            
             row.style.setProperty('color', 'blue', 'important');
+            // Aplicar o estilo de fundo vermelho para indicar que a linha foi processada
+            
 
         } else {
             console.log(`URL não encontrada na linha ${index + 1}`);
@@ -57,8 +59,8 @@ if (rows.length > 0) {
         index++; // Incrementar o índice para a próxima linha
     };
 
-    // Iniciar o intervalo que abrirá uma URL a cada 8 segundos (8000ms)
-    const intervalId = setInterval(openNextUrl, 7000);
+    // Iniciar o intervalo que abrirá uma URL a cada 4 segundos (4000ms)
+    const intervalId = setInterval(openNextUrl, 4000);
 } else {
     console.log("Nenhuma linha com URL encontrada.");
 }
