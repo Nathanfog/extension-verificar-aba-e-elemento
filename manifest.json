@@ -7,7 +7,7 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://trialm1.magehub.com.br/*"
+    "https://zedochapeu.magehub.com.br/*"
   ],
   "background": {
     "service_worker": "background.js"
